@@ -1,6 +1,4 @@
-# A boilerplate for projects in which they use these three react redux django combined.
-
-This project is a good head string to start.
+# A smart authentication with using JWE auth and mix it with clientId and userId of google analytics.
 
 # how to set up?
 
