@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as actionTypes from "./actionTypes";
+import { HOSTNAME } from "../../static";
 
 export const exerciseStart = () => {
   return {
@@ -33,7 +34,7 @@ export const exerciseCreate = (name, password) => {
   return dispatch => {
     dispatch(exerciseStart());
     axios
-      .post("http://127.0.0.1:8000/api/", {
+      .post(`${HOSTNAME}/api/`, {
         name: name,
         password: password
       })
@@ -51,7 +52,7 @@ export const fetchData = uuid => {
   return dispatch => {
     dispatch(exerciseStart());
     axios
-      .get(`http://127.0.0.1:8000/api/${uuid}/`)
+      .get(`${HOSTNAME}/api/${uuid}/`)
       .then(res => {
         const data = res.data;
         dispatch(exerciseFetched(data));
