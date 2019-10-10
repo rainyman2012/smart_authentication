@@ -30,6 +30,12 @@ export const exerciseFail = error => {
   };
 };
 
+export const dataClear = () => {
+  return {
+    type: actionTypes.EXERCISE_CLEARED
+  };
+};
+
 export const exerciseCreate = (name, password) => {
   return dispatch => {
     dispatch(exerciseStart());

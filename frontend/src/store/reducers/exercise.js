@@ -39,6 +39,13 @@ const exerciseFail = (state, action) => {
   });
 };
 
+const exerciseClear = (state, action) => {
+  return updateObject(state, {
+    name: "",
+    uuid: ""
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.EXERCISE_START:
@@ -49,6 +56,8 @@ const reducer = (state = initialState, action) => {
       return exerciseSuccessFetch(state, action);
     case actionTypes.EXERCISE_FAIL:
       return exerciseFail(state, action);
+    case actionTypes.EXERCISE_CLEARED:
+      return exerciseClear(state, action);
     default:
       return state;
   }

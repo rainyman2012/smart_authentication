@@ -13,7 +13,7 @@ import {
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/auth";
-
+import { dataClear } from "../store/actions/exercise";
 class CustomLayout extends React.Component {
   render() {
     const { authenticated } = this.props;
@@ -21,13 +21,15 @@ class CustomLayout extends React.Component {
       <div>
         <Menu fixed="top" inverted>
           <Container>
-            <Link to="/create">
-              <Menu.Item header>Create Exercise</Menu.Item>
-            </Link>
+            {!this.props.uuid ? (
+              <Link to="/create">
+                <Menu.Item header>Create Exercise</Menu.Item>
+              </Link>
+            ) : null}
             <Link to="/">
               <Menu.Item header>Home</Menu.Item>
             </Link>
-            {authenticated ? (
+            {this.props.uuid ? (
               <Menu.Item header onClick={() => this.props.logout()}>
                 Logout
               </Menu.Item>
@@ -114,13 +116,14 @@ class CustomLayout extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    authenticated: state.auth.token !== null
+    authenticated: state.auth.token !== null,
+    uuid: state.exercise.uuid
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    logout: () => dispatch(logout())
+    logout: () => dispatch(dataClear())
   };
 };
 
