@@ -21,6 +21,9 @@ class CustomLayout extends React.Component {
       <div>
         <Menu fixed="top" inverted>
           <Container>
+            <Link to="/create">
+              <Menu.Item header>Create Exercise</Menu.Item>
+            </Link>
             <Link to="/">
               <Menu.Item header>Home</Menu.Item>
             </Link>

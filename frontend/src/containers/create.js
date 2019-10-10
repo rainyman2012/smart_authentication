@@ -9,9 +9,9 @@ import {
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { NavLink, Redirect } from "react-router-dom";
-import { authSignup } from "../store/actions/auth";
+import { exerciseCreate } from "../store/actions/exercise";
 
-class RegistrationForm extends React.Component {
+class ExerciseForm extends React.Component {
   state = {
     name: "",
     password2: "",
@@ -32,8 +32,9 @@ class RegistrationForm extends React.Component {
 
   render() {
     const { name, password1 } = this.state;
-    const { error, loading, token } = this.props;
-    if (token) {
+    const { error, loading, uuid } = this.props;
+
+    if (uuid) {
       return <Redirect to="/" />;
     }
 
@@ -45,7 +46,7 @@ class RegistrationForm extends React.Component {
       >
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as="h2" color="teal" textAlign="center">
-            Signup to your account{" "}
+            Create Your Exercise{" "}
           </Header>{" "}
           {error && <p> {this.props.error.message} </p>}
           <React.Fragment>
@@ -77,7 +78,7 @@ class RegistrationForm extends React.Component {
                   loading={loading}
                   disabled={loading}
                 >
-                  Signup{" "}
+                  Create{" "}
                 </Button>{" "}
               </Segment>{" "}
             </Form>{" "}
@@ -90,19 +91,19 @@ class RegistrationForm extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    loading: state.auth.loading,
-    error: state.auth.error,
-    token: state.auth.token
+    loading: state.exercise.loading,
+    error: state.exercise.error,
+    uuid: state.exercise.uuid
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    create: (name, password1) => dispatch(authSignup(name, password1))
+    create: (name, password1) => dispatch(exerciseCreate(name, password1))
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RegistrationForm);
+)(ExerciseForm);
