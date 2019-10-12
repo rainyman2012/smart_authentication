@@ -24,7 +24,7 @@ class ProgramSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Program
-        fields = ('id', 'name', 'password', 'uuid')
+        fields = ('id', 'name','uuid')
         depth = 2  # we can set this to get all realation
         extra_kwargs = {
             'password': {'write_only': True},

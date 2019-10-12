@@ -33,5 +33,12 @@ from django.db.models import Q
 
 class ProgramViewSet(viewsets.ModelViewSet):
     serializer_class = ProgramSerializer
-    queryset = Program.objects.all()
+
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+
+    def get_queryset(self):
+        return self.request.user.program.all()
+
     lookup_field = 'uuid'

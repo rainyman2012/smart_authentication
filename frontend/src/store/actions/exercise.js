@@ -36,6 +36,13 @@ export const dataClear = () => {
   };
 };
 
+export const setGAClientId = clientId => {
+  return {
+    type: actionTypes.EXERCISE_SET_CLIENTID,
+    clientId: clientId
+  };
+};
+
 export const exerciseCreate = (name, password) => {
   return dispatch => {
     dispatch(exerciseStart());

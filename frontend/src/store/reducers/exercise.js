@@ -5,7 +5,8 @@ const initialState = {
   uuid: null,
   name: null,
   error: null,
-  loading: false
+  loading: false,
+  clientId: ""
 };
 
 const exerciseStart = (state, action) => {
@@ -46,6 +47,12 @@ const exerciseClear = (state, action) => {
   });
 };
 
+const exerciseSetGAClientId = (state, action) => {
+  return updateObject(state, {
+    clientId: action.clientId
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.EXERCISE_START:
@@ -58,6 +65,8 @@ const reducer = (state = initialState, action) => {
       return exerciseFail(state, action);
     case actionTypes.EXERCISE_CLEARED:
       return exerciseClear(state, action);
+    case actionTypes.EXERCISE_SET_CLIENTID:
+      return exerciseSetGAClientId(state, action);
     default:
       return state;
   }

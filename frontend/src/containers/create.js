@@ -9,13 +9,14 @@ import {
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { NavLink, Redirect } from "react-router-dom";
-import { exerciseCreate } from "../store/actions/exercise";
+import { exerciseCreate, setGAClientId } from "../store/actions/exercise";
 
 class ExerciseForm extends React.Component {
   state = {
     name: "",
-    password2: "",
-    uuid: ""
+    password1: "",
+    uuid: "",
+    clientid: ""
   };
 
   handleSubmit = e => {
@@ -82,6 +83,7 @@ class ExerciseForm extends React.Component {
                 </Button>{" "}
               </Segment>{" "}
             </Form>{" "}
+            <p>{this.state.clientid}</p>
           </React.Fragment>{" "}
         </Grid.Column>{" "}
       </Grid>
@@ -99,7 +101,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    create: (name, password1) => dispatch(exerciseCreate(name, password1))
+    create: (name, password1) => dispatch(exerciseCreate(name, password1)),
+    setClientId: clientId => dispatch(setGAClientId(clientId))
   };
 };
 

@@ -8,6 +8,8 @@ urlpatterns = [
     # path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('exercise.urls', namespace='api')),
+    path('auth/', include('accounts.urls', namespace='auth')),
+
     re_path(r'^.*', TemplateView.as_view(template_name='index.html')),
 
 
