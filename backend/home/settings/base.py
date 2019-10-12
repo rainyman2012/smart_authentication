@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
     'rest_framework',
+    'rest_framework.authtoken',
     'exercise',
     'knox',
     'accounts'
@@ -74,7 +75,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
 }
 

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .api import RegisterAPI, LoginAPI, UserApi
-from knox import views as knox_views
+from rest_framework.authtoken import views
 
 app_name = "auth"
 urlpatterns = [

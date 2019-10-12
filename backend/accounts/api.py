@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-from knox.models import AuthToken
+from rest_framework.authtoken.models import Token
 from .serializers import RegisterSerializer, UserSerializer, LoginSerializer
 
 
@@ -13,11 +13,12 @@ class RegisterAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        token, created = Token.objects.get_or_create(user=user)
         # In my experience we didnt need that contex variable at all.
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(user)[1]
-        })
+            "token": token.key,
+            "created": created})
 # Login API
 
 
@@ -28,14 +29,12 @@ class LoginAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
-        tokens = AuthToken.objects.all()
 
-        token = AuthToken.objects.create(user)
+        token = Token.objects.get(user=user)
         # In my experience we didnt need that contex variable at all.
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": token[1]
-        })
+            "token": token.key})
 
 # Get User Apo
 
