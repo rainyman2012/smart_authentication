@@ -1,4 +1,4 @@
-# A smart authentication with using JWE auth and mix it with clientId and userId of google analytics.
+# A smart authentication with using Token auth and mix it with clientId and userId of google analytics.
 
 # how to set up?
 
