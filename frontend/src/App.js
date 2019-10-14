@@ -4,8 +4,9 @@ import { connect } from "react-redux";
 import BaseRouter from "./routes";
 import * as actions from "./store/actions/auth";
 import "semantic-ui-css/semantic.min.css";
+import "antd/dist/antd.css";
+
 import CustomLayout from "./containers/Layout";
-import ReactGA from "react-ga";
 
 // function initializeReactGA() {
 //   ReactGA.initialize("UA-149797608-1");

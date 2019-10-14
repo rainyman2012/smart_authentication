@@ -58,3 +58,7 @@ class LoginSerializer(serializers.Serializer):
             return user
         raise serializers.ValidationError(
             "one of your passowrd or username is incorrect")
+
+
+class LogoutSerializer(serializers.Serializer):
+    pass
