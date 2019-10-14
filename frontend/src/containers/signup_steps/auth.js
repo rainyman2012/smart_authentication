@@ -12,6 +12,8 @@ import {
   Button,
   AutoComplete
 } from "antd";
+
+import { PasswordInput } from "antd-password-input-strength";
 import { connect } from "react-redux";
 import { HOSTNAME } from "../../static";
 import { NavLink, Redirect } from "react-router-dom";
@@ -69,7 +71,10 @@ class RegisterForm extends React.Component {
     }
     callback();
   };
-
+  passwordPolicy = (rule, value, callback) => {
+    if (value.length < 4) callback("Your password must be greater than four");
+    else callback();
+  };
   compareToFirstPassword = (rule, value, callback) => {
     const { form } = this.props;
     if (value && value !== form.getFieldValue("password")) {
@@ -168,7 +173,6 @@ class RegisterForm extends React.Component {
           </Form.Item>
 
           <Form.Item
-            hasFeedback
             style={{
               display: "flex",
               justifyContent: "center"
@@ -182,9 +186,12 @@ class RegisterForm extends React.Component {
                 },
                 {
                   validator: this.validateToNextPassword
+                },
+                {
+                  validator: this.passwordPolicy
                 }
               ]
-            })(<Input.Password />)}
+            })(<PasswordInput placeholder="Password" inputProps={{}} />)}
           </Form.Item>
 
           <Form.Item
@@ -204,7 +211,13 @@ class RegisterForm extends React.Component {
                   validator: this.compareToFirstPassword
                 }
               ]
-            })(<Input.Password onBlur={this.handleConfirmBlur} />)}
+            })(
+              <Input.Password
+                placeholder="Confirm Password"
+                inputProps={{}}
+                onBlur={this.handleConfirmBlur}
+              />
+            )}
           </Form.Item>
 
           <Form.Item

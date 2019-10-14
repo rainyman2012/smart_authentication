@@ -8,6 +8,7 @@ from passlib.hash import pbkdf2_sha256
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
+
 def generate_uuid():
     _uuid = base64.urlsafe_b64encode(uuid.uuid4().bytes)
     _uuid = _uuid.decode('utf-8').replace('=', '')
@@ -40,15 +41,12 @@ class Program(models.Model):
     name = models.CharField(max_length=80)
     uuid = models.CharField(max_length=32, blank=True,
                             null=True, default=generate_uuid)
-    user = models.OneToOneField(
-                 settings.AUTH_USER_MODEL, related_name='program',
-                on_delete=models.CASCADE, verbose_name=_("User")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='program',
+        on_delete=models.CASCADE, null=True, blank=True
     )
     password = models.CharField(max_length=256, default="1234")
     objects = ProgramManager()
 
-
     def __str__(self):
         return self.name
-
-

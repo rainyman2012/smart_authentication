@@ -52,7 +52,7 @@ class LoginAPI(generics.GenericAPIView):
 # Get User Apo
 
 
-class UserApi(generics.RetrieveAPIView):
+class UserApi(generics.RetrieveAPIView, generics.UpdateAPIView):
     permission_classes = [
         permissions.IsAuthenticated
     ]
@@ -61,3 +61,12 @@ class UserApi(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+    def patch(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', True)
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
+        if serializer.is_valid():
+            self.perform_update(serializer)
+        return Response(serializer.data)

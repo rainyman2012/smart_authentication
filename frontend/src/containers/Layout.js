@@ -34,7 +34,7 @@ class CustomLayout extends React.Component {
           {this.props.children}
         </Content>
         <Footer style={{ textAlign: "center" }}>
-          Ant Design ©2018 Created by Ant UED
+          Two Language Smart Authentication ©2018 Created by Ehsan Ahmadi
         </Footer>
       </Layout>
     );

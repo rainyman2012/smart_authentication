@@ -10,4 +10,3 @@ router.register(r'', ProgramViewSet, base_name='exercise')
 
 
 urlpatterns = router.urls
-

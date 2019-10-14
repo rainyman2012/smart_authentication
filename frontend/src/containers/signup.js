@@ -7,6 +7,9 @@ import AuthForm from "./signup_steps/auth";
 import PersonalForm from "./signup_steps/personal";
 import LanguageForm from "./signup_steps/language";
 import { authSignup } from "../store/actions/auth";
+import { HOSTNAME } from "../static";
+import axios from "axios";
+
 const { Step } = Steps;
 
 class SignUpForm extends React.Component {
@@ -16,13 +19,41 @@ class SignUpForm extends React.Component {
     password: "",
     email: "",
     realName: "",
-    sex: "",
+    gender: "",
+    loading: "",
+    serverError: "",
     step: 1
   };
 
   nextStep = () => {
     const step = this.state.step + 1;
     this.setState({ step });
+  };
+  submit = () => {
+    console.log(this.state);
+    this.setState({ loading: true });
+    axios({
+      method: "post",
+      data: {
+        username: this.state.username,
+        password: this.state.password,
+        email: this.state.email
+      },
+      url: `${HOSTNAME}/auth/register`,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        console.log(res.data["token"]);
+        this.setState({ loading: false });
+      })
+      .catch(err => {
+        this.setState({ serverError: "Server Error" });
+        this.setState({ loading: false });
+
+        console.log(err);
+      });
   };
 
   prevStep = () => {
@@ -67,7 +98,13 @@ class SignUpForm extends React.Component {
         );
         break;
       case 3:
-        return <PersonalForm />;
+        return (
+          <PersonalForm
+            submit={this.submit}
+            handleChange={this.handleChange}
+            values={values}
+          />
+        );
         break;
       default:
         return (

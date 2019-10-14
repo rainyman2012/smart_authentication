@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import Program
 from django.db.models import Count
 from django.contrib.auth.models import User
+from accounts.serializers import UserSerializer
 from rest_framework.utils import html, model_meta, representation
 from pudb import set_trace
 
@@ -19,12 +20,12 @@ except ImportError:
 from django.db.models import Q
 
 
-
 class ProgramSerializer(serializers.ModelSerializer):
+    user = UserSerializer(required=False)
 
     class Meta:
         model = Program
-        fields = ('id', 'name','uuid')
+        fields = ('id', 'name', 'uuid', 'user')
         depth = 2  # we can set this to get all realation
         extra_kwargs = {
             'password': {'write_only': True},
@@ -57,11 +58,13 @@ class ProgramSerializer(serializers.ModelSerializer):
         """
 
         ModelClass = self.Meta.model
-        instance = ModelClass._default_manager.create(**validated_data)
+        instance = ModelClass._default_manager.create(
+            user=self.context['request'].user, **validated_data)
+
         return instance
 
     def update(self, instance, validated_data):
-   
+
         # set_trace()  # This is put to debug.
 
         info = model_meta.get_field_info(instance)
@@ -78,6 +81,5 @@ class ProgramSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
 
         instance.save()
-
 
         return instance

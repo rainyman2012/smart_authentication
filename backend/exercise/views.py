@@ -15,6 +15,10 @@ from exercise.serializers import (
     ProgramSerializer,
 )
 
+from accounts.serializers import (
+    UserSerializer,
+)
+
 from .models import Program
 import io
 from rest_framework import authentication, permissions
@@ -42,3 +46,9 @@ class ProgramViewSet(viewsets.ModelViewSet):
         return self.request.user.program.all()
 
     lookup_field = 'uuid'
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+        return Response(request.user.username)
