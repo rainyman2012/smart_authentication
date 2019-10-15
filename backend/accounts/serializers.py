@@ -1,8 +1,7 @@
 
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-
+from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import ugettext_lazy as _
 
 from pudb import set_trace
@@ -22,7 +21,7 @@ from django.db.models import Q
 
 # We use knox only for creating token
 
-
+UserModel = get_user_model()
 # User Serializer
 
 class UserSerializer(serializers.ModelSerializer):
@@ -62,3 +61,12 @@ class LoginSerializer(serializers.Serializer):
 
 class LogoutSerializer(serializers.Serializer):
     pass
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    """
+    User model w/o password
+    """
+    class Meta:
+        model = UserModel
+        fields = ('pk', 'username', 'email', 'first_name', 'last_name')

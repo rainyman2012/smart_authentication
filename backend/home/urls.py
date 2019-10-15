@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.conf.urls import url
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -9,7 +10,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('exercise.urls', namespace='api')),
     path('auth/', include('accounts.urls', namespace='auth')),
-
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     re_path(r'^.*', TemplateView.as_view(template_name='index.html')),
 
 
