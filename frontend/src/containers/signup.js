@@ -36,16 +36,16 @@ class SignUpForm extends React.Component {
       method: "post",
       data: {
         username: this.state.username,
-        password: this.state.password,
-        email: this.state.email
+        password1: this.state.password,
+        password2: this.state.password
       },
-      url: `${HOSTNAME}/auth/register`,
+      url: `${HOSTNAME}/rest-auth/registration/`,
       headers: {
         "Content-Type": "application/json"
       }
     })
       .then(res => {
-        console.log(res.data["token"]);
+        console.log(res.data["key"]);
         this.setState({ loading: false });
       })
       .catch(err => {

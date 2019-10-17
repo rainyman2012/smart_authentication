@@ -1,12 +1,22 @@
 from django.urls import path, include, reverse
-from exercise.views import (
-    ProgramViewSet
+from django.conf.urls import url
+from .views import (
+    ProgramViewSet,
+    ProfileView,
 )
+
 from rest_framework.routers import DefaultRouter
 app_name = 'api'
 
+urlpatterns = [
+    url(r'profile/', ProfileView.as_view(), name="profile")
+]
+
+
 router = DefaultRouter()
-router.register(r'', ProgramViewSet, base_name='exercise')
+router.register(r'program', ProgramViewSet, base_name="Program")
 
 
-urlpatterns = router.urls
+urlpatterns += router.urls
+
+print(router.urls)

@@ -2,7 +2,7 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from .serializers import RegisterSerializer, UserSerializer, LoginSerializer
+from .serializers import RegisterSerializer, UserDetailsSerializer, LoginSerializer
 
 
 # Register API
@@ -17,7 +17,7 @@ class RegisterAPI(generics.GenericAPIView):
         token, created = Token.objects.get_or_create(user=user)
         # In my experience we didnt need that contex variable at all.
         return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "user": UserDetailsSerializer(user, context=self.get_serializer_context()).data,
             "token": token.key,
             "created": created})
 
@@ -45,7 +45,7 @@ class LoginAPI(generics.GenericAPIView):
         # In my experience we didnt need that contex variable at all.
         token, created = Token.objects.get_or_create(user=user)
         return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "user": UserDetailsSerializer(user, context=self.get_serializer_context()).data,
             "token": token.key,
             "created": created})
 
@@ -57,7 +57,7 @@ class UserApi(generics.RetrieveAPIView, generics.UpdateAPIView):
         permissions.IsAuthenticated
     ]
 
-    serializer_class = UserSerializer
+    serializer_class = UserDetailsSerializer
 
     def get_object(self):
         return self.request.user

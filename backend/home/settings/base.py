@@ -75,6 +75,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
 }
@@ -87,6 +88,7 @@ REST_SESSION_LOGIN = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': "accounts.serializers.UserDetailsSerializer",
+    'USER_DETAILS_SERIALIZER': "exercise.serializers.UserDetailsSerializer",
 }
 
+LOGIN_REDIRECT_URL = "/"

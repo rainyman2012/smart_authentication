@@ -24,12 +24,6 @@ from django.db.models import Q
 UserModel = get_user_model()
 # User Serializer
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'email')
-# Register Serializer
-
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -67,6 +61,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     """
     User model w/o password
     """
+
     class Meta:
         model = UserModel
         fields = ('pk', 'username', 'email', 'first_name', 'last_name')
