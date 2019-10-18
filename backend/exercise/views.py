@@ -27,7 +27,7 @@ from rest_framework.views import APIView
 
 from rest_framework.generics import (
     ListAPIView,
-    RetrieveUpdateAPIView
+    CreateAPIView, RetrieveUpdateAPIView
 )
 from django.contrib.auth.models import User
 from django.views import View
@@ -56,7 +56,7 @@ class ProgramViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class ProfileView(RetrieveUpdateAPIView):
+class ProfileView(CreateAPIView, RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
 
     permission_classes = [

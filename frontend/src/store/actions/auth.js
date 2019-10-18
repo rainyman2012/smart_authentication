@@ -1,6 +1,8 @@
 import axios from "axios";
 import * as actionTypes from "./actionTypes";
 import { HOSTNAME } from "../../static";
+import Cookies from "universal-cookie";
+
 export const authStart = () => {
   return {
     type: actionTypes.AUTH_START
@@ -59,23 +61,51 @@ export const authLogin = (username, password) => {
   };
 };
 
-export const authSignup = (username, email, password1, password2) => {
+export const authSignup = (username, password) => {
   return dispatch => {
     dispatch(authStart());
     axios
       .post(`${HOSTNAME}/rest-auth/registration/`, {
         username: username,
-        email: email,
-        password1: password1,
-        password2: password2
+        password1: password,
+        password2: password
       })
       .then(res => {
+        const cookies = new Cookies();
         const token = res.data.key;
-        const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
-        localStorage.setItem("token", token);
-        localStorage.setItem("expirationDate", expirationDate);
+        const expirationDate = new Date(new Date().getTime() + 3600 * 8 * 1000); // The token will be Expired after 8 hours
+        cookies.set("token", token, {
+          path: "/",
+          expires: expirationDate
+        });
         dispatch(authSuccess(token));
-        dispatch(checkAuthTimeout(3600));
+      })
+      .catch(err => {
+        dispatch(authFail(err));
+      });
+  };
+};
+
+export const authProfile = (gender, lang, age, image, key) => {
+  return dispatch => {
+    axios
+      .post(
+        `${HOSTNAME}/api/profile/`,
+        {
+          age: age,
+          gender: gender,
+          lang: lang,
+          image: image
+        },
+        {
+          headers: {
+            Authorization: "Token " + key
+          }
+        }
+      )
+      .then(res => {
+        const data = res.data;
+        console.log(data);
       })
       .catch(err => {
         dispatch(authFail(err));

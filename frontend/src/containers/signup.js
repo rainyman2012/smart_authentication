@@ -6,7 +6,7 @@ import { NavLink, Redirect } from "react-router-dom";
 import AuthForm from "./signup_steps/auth";
 import PersonalForm from "./signup_steps/personal";
 import LanguageForm from "./signup_steps/language";
-import { authSignup } from "../store/actions/auth";
+import { authSignup, authProfile } from "../store/actions/auth";
 import { HOSTNAME } from "../static";
 import axios from "axios";
 
@@ -20,40 +20,17 @@ class SignUpForm extends React.Component {
     email: "",
     realName: "",
     gender: "",
+    image: null,
     loading: "",
     serverError: "",
-    step: 1
+    age: 10,
+    step: 1,
+    completed: false
   };
 
   nextStep = () => {
     const step = this.state.step + 1;
     this.setState({ step });
-  };
-  submit = () => {
-    console.log(this.state);
-    this.setState({ loading: true });
-    axios({
-      method: "post",
-      data: {
-        username: this.state.username,
-        password1: this.state.password,
-        password2: this.state.password
-      },
-      url: `${HOSTNAME}/rest-auth/registration/`,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        console.log(res.data["key"]);
-        this.setState({ loading: false });
-      })
-      .catch(err => {
-        this.setState({ serverError: "Server Error" });
-        this.setState({ loading: false });
-
-        console.log(err);
-      });
   };
 
   prevStep = () => {
@@ -61,11 +38,24 @@ class SignUpForm extends React.Component {
     this.setState({ step });
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    const { name, password1 } = this.state;
-    this.props.create(name, password1);
+  handleSubmit = () => {
+    const { username, password } = this.state;
+    this.props.create(username, password);
+    this.setState({ completed: true });
   };
+
+  componentWillUpdate(nextProps, nextState) {
+    if (this.props.token !== nextProps.token) {
+      // gender, lang, age, image, key;
+      this.props.create_profile(
+        this.state.gender,
+        this.state.language,
+        this.state.age,
+        this.state.image,
+        nextProps.token
+      );
+    }
+  }
 
   handleChange = (field, value) => {
     this.setState({
@@ -74,66 +64,94 @@ class SignUpForm extends React.Component {
   };
 
   render() {
-    const { step } = this.state;
-    const { language, username, password, email, realName, sex } = this.state;
-    const values = { language, username, password, email, realName, sex };
+    if (this.props.loading) return <Spin>Loading</Spin>;
 
-    switch (step) {
-      case 1:
-        return (
-          <LanguageForm
-            next={this.nextStep}
-            handleChange={this.handleChange}
-            values={values}
-          />
-        );
-        break;
-      case 2:
-        return (
-          <AuthForm
-            next={this.nextStep}
-            handleChange={this.handleChange}
-            values={values}
-          />
-        );
-        break;
-      case 3:
-        return (
-          <PersonalForm
-            submit={this.submit}
-            handleChange={this.handleChange}
-            values={values}
-          />
-        );
-        break;
-      default:
-        return (
-          <LanguageForm
-            next={this.nextStep}
-            handleChange={this.handleChange}
-            values={values}
-          />
-        );
-    }
+    const { step } = this.state;
+    const {
+      language,
+      username,
+      password,
+      email,
+      realName,
+      gender,
+      image
+    } = this.state;
+    const values = {
+      language,
+      username,
+      password,
+      email,
+      realName,
+      gender,
+      image
+    };
+    let evaluateForms = "";
+    if (!this.state.completed)
+      switch (step) {
+        case 1:
+          evaluateForms = (
+            <LanguageForm
+              next={this.nextStep}
+              handleChange={this.handleChange}
+              values={values}
+            />
+          );
+
+          break;
+        case 2:
+          evaluateForms = (
+            <AuthForm
+              next={this.nextStep}
+              handleChange={this.handleChange}
+              values={values}
+            />
+          );
+          break;
+        case 3:
+          evaluateForms = (
+            <PersonalForm
+              submit={this.handleSubmit}
+              handleChange={this.handleChange}
+              values={values}
+            />
+          );
+          break;
+        default:
+          evaluateForms = (
+            <LanguageForm
+              next={this.nextStep}
+              handleChange={this.handleChange}
+              values={values}
+            />
+          );
+      }
+
+    return (
+      <React.Fragment>
+        {evaluateForms}
+        <p>{this.props.token}</p>
+      </React.Fragment>
+    );
   }
 }
 
-export default SignUpForm;
-// const mapStateToProps = state => {
-//   return {
-//     loading: state.auth.loading,
-//     error: state.auth.error,
-//     token: state.auth.token
-//   };
-// };
+const mapStateToProps = state => {
+  return {
+    loading: state.auth.loading,
+    error: state.auth.error,
+    token: state.auth.token
+  };
+};
 
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     create: (name, password1) => dispatch(authSignup(name, password1))
-//   };
-// };
+const mapDispatchToProps = dispatch => {
+  return {
+    create: (name, password1) => dispatch(authSignup(name, password1)),
+    create_profile: (gender, lang, age, image, key) =>
+      dispatch(authProfile(gender, lang, age, image, key))
+  };
+};
 
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(SignUpForm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignUpForm);

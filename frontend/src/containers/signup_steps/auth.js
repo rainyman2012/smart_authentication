@@ -31,7 +31,8 @@ class RegisterForm extends React.Component {
     existUserError: "",
     serverError: false,
     confirmPassError: false,
-    loading: false
+    loading: false,
+    passwordLength: 6
   };
   continue = () => {
     var event = new Event("blur", {
@@ -72,7 +73,10 @@ class RegisterForm extends React.Component {
     callback();
   };
   passwordPolicy = (rule, value, callback) => {
-    if (value.length < 4) callback("Your password must be greater than four");
+    if (value.length < this.state.passwordLength)
+      callback(
+        "Your password must be greater than " + this.state.passwordLength
+      );
     else callback();
   };
   compareToFirstPassword = (rule, value, callback) => {

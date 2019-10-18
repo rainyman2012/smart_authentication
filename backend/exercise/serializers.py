@@ -76,7 +76,7 @@ class Base64ImageField(serializers.ImageField):
 
 class ProfileSerializer(serializers.ModelSerializer):
     image = Base64ImageField(
-        max_length=None, use_url=True,
+        max_length=None, use_url=True, required=False
     )
 
     class Meta:
@@ -104,6 +104,13 @@ class ProfileSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
 
         instance.save()
+
+        return instance
+
+    def create(self, validated_data):
+        ModelClass = self.Meta.model
+        instance = ModelClass._default_manager.create(
+            user=self.context['request'].user, **validated_data)
 
         return instance
 
