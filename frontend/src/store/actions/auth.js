@@ -2,6 +2,7 @@ import axios from "axios";
 import * as actionTypes from "./actionTypes";
 import { HOSTNAME } from "../../static";
 import Cookies from "universal-cookie";
+import { message } from "antd";
 
 export const authStart = () => {
   return {
@@ -24,8 +25,8 @@ export const authFail = error => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("expirationDate");
+  const cookies = new Cookies();
+  cookies.remove("token", { path: "/" });
   return {
     type: actionTypes.AUTH_LOGOUT
   };
@@ -48,12 +49,14 @@ export const authLogin = (username, password) => {
         password: password
       })
       .then(res => {
+        const cookies = new Cookies();
         const token = res.data.key;
-        const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
-        localStorage.setItem("token", token);
-        localStorage.setItem("expirationDate", expirationDate);
+        const expirationDate = new Date(new Date().getTime() + 3600 * 8 * 1000); // The token will be Expired after 8 hours
+        cookies.set("token", token, {
+          path: "/",
+          expires: expirationDate
+        });
         dispatch(authSuccess(token));
-        dispatch(checkAuthTimeout(3600));
       })
       .catch(err => {
         dispatch(authFail(err));
@@ -74,6 +77,7 @@ export const authSignup = (username, password) => {
         const cookies = new Cookies();
         const token = res.data.key;
         const expirationDate = new Date(new Date().getTime() + 3600 * 8 * 1000); // The token will be Expired after 8 hours
+
         cookies.set("token", token, {
           path: "/",
           expires: expirationDate
@@ -115,21 +119,11 @@ export const authProfile = (gender, lang, age, image, key) => {
 
 export const authCheckState = () => {
   return dispatch => {
-    const token = localStorage.getItem("token");
-    if (token === undefined) {
-      dispatch(logout());
-    } else {
-      const expirationDate = new Date(localStorage.getItem("expirationDate"));
-      if (expirationDate <= new Date()) {
-        dispatch(logout());
-      } else {
-        dispatch(authSuccess(token));
-        dispatch(
-          checkAuthTimeout(
-            (expirationDate.getTime() - new Date().getTime()) / 1000
-          )
-        );
-      }
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    message.success(token);
+    if (token) {
+      dispatch(authSuccess(token));
     }
   };
 };

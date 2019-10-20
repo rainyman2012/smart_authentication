@@ -54,6 +54,9 @@ class SignUpForm extends React.Component {
         this.state.image,
         nextProps.token
       );
+      message.success("Your account successfully created.", () => {
+        this.props.history.push("/");
+      });
     }
   }
 
