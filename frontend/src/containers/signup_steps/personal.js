@@ -52,6 +52,7 @@ class PersonalForm extends React.Component {
 
   handleDeleteImage = e => {
     this.props.handleChange("image", null);
+    this.setState({ image: null });
   };
 
   onChange = info => {
